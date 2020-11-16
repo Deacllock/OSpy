@@ -1,3 +1,4 @@
 wheel
 pycodestyle
 autopep8
+setuptools
