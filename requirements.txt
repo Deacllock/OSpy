@@ -1,1 +1,3 @@
 socket
+setuptools
+scapy
