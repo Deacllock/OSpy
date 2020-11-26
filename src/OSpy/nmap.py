@@ -9,11 +9,14 @@ def hosts_list(network):
     hosts = []
 
     for sent, received in result:
-        hosts.append({'ip': received.psrc, 'mac': received.hwsrc})
+        ip = received.psrc
+        name = get_name(ip)
+        hosts.append({'ip': ip, 'mac': received.hwsrc, 'name': name})
 
     print("Available devices in the network: " + str(len(hosts)))
     print("IP" + " " * 18 + "MAC")
     for host in hosts:
+        print(host['name'])
         print("{:16}    {}".format(host['ip'], host['mac']))
     return hosts
 
