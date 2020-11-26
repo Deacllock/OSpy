@@ -1,16 +1,30 @@
-class HostError(ErrorType):
-    pass
+import socket
 
-class Host:
-    def __init__(self, ip, name=None, os=None):
+class Host:    
+    #class HostError(ErrorType):
+    #    pass
+
+    def __init__(self, ip):
         self.ip = ip
-        self.name = name
-        self.os = os
+        self.dns_name = self._get_name(ip)
+        self.os = self._get_os(ip)
+        self.ports = []
 
-    #Convert the host into string (print(host))
+    def _get_name(self, ip):
+        try:
+            return socket.gethostbyaddr(ip)[0]
+
+        #Sometimes you can't find the hostnames nor offline neither online
+        except socket.herror :
+            return "Unknown"
+    
+    def _get_os(self, ip):
+        #if os = windows -> netbios
+        return "os"
+
+    def add_ports(self, ports):
+        self.ports.append(ports)
+
     def __repr__(self):
-        return 'str description for Host'
-    #careful with os and name that can be null, you could raise a custom exception (raise HostError())
-
-h = Host('ip')
-print(h)
+        return 'DNS Name : %s\nOS : %s\nIP : %s\n Open ports : %s' % (self.dns_name, 
+                self.os, self.ip, self.ports)
