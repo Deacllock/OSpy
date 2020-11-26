@@ -1,5 +1,23 @@
 from scapy.all import ARP, Ether, srp
 
+
+def hosts_list(network):
+    arp = ARP(pdst=network)
+    ether = Ether(dst="ff:ff:ff:ff:ff:ff")
+    packet = ether / arp
+    result = srp(packet, timeout=3, verbose=0)[0]
+    hosts = []
+
+    for sent, received in result:
+        hosts.append({'ip': received.psrc, 'mac': received.hwsrc})
+
+    print("Available devices in the network: " + str(len(hosts)))
+    print("IP" + " " * 18 + "MAC")
+    for host in hosts:
+        print("{:16}    {}".format(host['ip'], host['mac']))
+    return hosts
+
+
 class NmapError():
     pass
 
@@ -9,33 +27,6 @@ class TestError():
 
 
 class Nmap:
-    def _network(self):
-        target_ip = input("Enter your target ip:")
-        # IP Address for the destination
-        # create ARP packet
-        arp = ARP(pdst=target_ip)
-        # create the Ether broadcast packet
-        # ff:ff:ff:ff:ff:ff MAC address indicates broadcasting
-        ether = Ether(dst="ff:ff:ff:ff:ff:ff")
-        # stack them
-        packet = ether / arp
-
-        result = srp(packet, timeout=3, verbose=0)[0]
-
-        # a list of clients, we will fill this in the upcoming loop
-        clients = []
-
-        for sent, received in result:
-            # for each response, append ip and mac address to `clients` list
-            clients.append({'ip': received.psrc, 'mac': received.hwsrc})
-
-        # print clients
-        print("Available devices in the network: " + str(len(clients)))
-        print("IP" + " " * 18 + "MAC")
-        for client in clients:
-            print("{:16}    {}".format(client['ip'], client['mac']))
-        return clients
-
     def __init__(self):
         self.network = self._network()
-        self.hosts = []
+        self.hosts = hosts_list(self.network)
