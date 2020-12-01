@@ -1,5 +1,5 @@
 import socket
-
+from ports import get_ports
 
 class Host:
     # class HostError(ErrorType):
@@ -25,7 +25,7 @@ class Host:
         return "os"
 
     def add_ports(self, ports):
-        self.ports.append(ports)
+        self.ports = get_ports(self.ip)
 
     # add option for oppening ports
     def __repr__(self):
