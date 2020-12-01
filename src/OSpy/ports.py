@@ -36,8 +36,8 @@ def port_scan(port):
 def init_ports_scan():
     socket.setdefaulttimeout(0.25)
 #    print('Starting scan on host: ', ip)
-    for worker in range(0, 65535):
-        q.put(worker)
+    for port in range(0, 65535):
+        q.put(port)
 
 
 def threader():
