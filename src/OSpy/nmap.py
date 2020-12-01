@@ -14,8 +14,8 @@ class Nmap:
         return input("Enter your network with /24:\n")
 
     def set_hosts(self, hosts_list):
-        for h in hosts_list:
-            self.hosts.append(Host(h['ip'], h['mac']))
+        for host in hosts_list:
+            self.hosts.append(Host(host['ip'], host['mac']))
 
     def _hosts_list(self, network):
         arp = ARP(pdst=network)
