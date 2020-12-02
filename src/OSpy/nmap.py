@@ -27,7 +27,6 @@ class Nmap:
         for sent, received in result:
             ip = received.psrc
             hosts.append({'ip': ip, 'mac': received.hwsrc})
-
         return hosts
 
     def __repr__(self):
