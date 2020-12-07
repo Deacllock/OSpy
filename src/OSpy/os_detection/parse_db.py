@@ -1,3 +1,5 @@
+#   Parse the given Fingerprints DB to get a list of Fingerprint objects used as templates
+
 import os
 from fingerprints import FingerPrint, Result
 
@@ -5,6 +7,7 @@ FINGERPRINTS = []
 R_TYPES = ['SEQ', 'OPS', 'WIN', 'T1'] 
 
 
+#  Parse tests results linked to a specific Fingerprint
 def get_results(category, params_list):
     ret = {}
     params = params_list.split('%')
@@ -25,6 +28,7 @@ def get_results(category, params_list):
     return Result(category, ret)
 
 
+#  Parse Fingerprint from the db
 def add_fingerprint(name, i, len_db, db):
     results = []
     
@@ -38,6 +42,7 @@ def add_fingerprint(name, i, len_db, db):
     return i
 
 
+#  Convert FingerPrints db to a python exploitable list of Fingerprints
 def parse_db(os_db):
     with  open(os_db, 'r') as f:
         db = f.readlines()
@@ -55,8 +60,4 @@ def parse_db(os_db):
 
             elif (line[:11] == "Fingerprint"):
                 i = add_fingerprint(line[12:-1], i, len_db, db) #see what to choose as a name
-                    
-
-parse_db("nmap-os-db")
-for f in FINGERPRINTS:
-    print(f)
+    return FINGERPRINTS
