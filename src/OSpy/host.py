@@ -1,6 +1,7 @@
 import socket
 from ports import get_ports
 
+
 class Host:
     # class HostError(ErrorType):
     #    pass

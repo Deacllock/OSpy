@@ -11,20 +11,25 @@ from sequence_generation import send_tcp_probes, parse_tcp_responses
 
 from fingerprints import FingerPrint, Result
 
-conf.L3socket=L3RawSocket
+conf.L3socket = L3RawSocket
 
 responses = []
 
 
 #  Add sniffed packet into responses list
 def get_packet(packet):
-    if not packet in responses:
+    if packet not in responses:
         responses.append(packet)
 
 #  Sniff the network to get the responses to packets we have send
+
+
 def start_sniff(dst):
-    filter = 'host %s and (dst port 63000 or dst port 63001 or dst port 63002 or dst port 63003 or dst port 63004 or dst port 63005)' %dst
-    t = AsyncSniffer(iface=get_if_list(), filter=filter, prn=get_packet)#prn=lambda x: x.summary())
+    filter = 'host %s and (dst port 63000 or dst port 63001 or dst port 63002 or dst port 63003 or dst port 63004 or dst port 63005)' % dst
+    t = AsyncSniffer(
+        iface=get_if_list(),
+        filter=filter,
+        prn=get_packet)  # prn=lambda x: x.summary())
     t.start()
     time.sleep(2)
 
@@ -41,7 +46,7 @@ def get_os_name(x):
     for fp in fp_db:
         if x == fp:
             os.append(fp)
-    return os     
+    return os
 
 
 #  Start OS detection as specified above
@@ -50,11 +55,12 @@ def os_detection(dst, port):
 
     send_tcp_probes(dst, port)
     tcp_r = parse_tcp_responses(responses)
-    
+
     fp = Fingerprint('Who Am I', tcp_r)
     oss = get_os_name(fp)
     print(oss)
 
-    #end_sniff(sniffer)
+    # end_sniff(sniffer)
 
-os_detection('127.0.0.1', 80) #dst + open port
+
+os_detection('127.0.0.1', 80)  # dst + open port

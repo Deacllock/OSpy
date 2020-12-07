@@ -2,8 +2,8 @@
 
 class Result:
     def __init__(self, category, params):
-        self.category = category #  name of tests type
-        self.params = params #  dictionnary containing the tests results for the category
+        self.category = category  # name of tests type
+        self.params = params  # dictionnary containing the tests results for the category
 
     def __repr__(self):
         return self.category + str(self.params)
@@ -18,15 +18,16 @@ class Result:
 
         return True
 
+
 class FingerPrint:
-    def  __init__(self, name, results):
+    def __init__(self, name, results):
         self.name = name
-        self.results = results # list of tests results
+        self.results = results  # list of tests results
 
     def __repr__(self):
         ret = self.name
         for r in self.results:
-            ret += '\n' + str(r) 
+            ret += '\n' + str(r)
         return ret + '\n'
 
     def __eq__(self, other):
