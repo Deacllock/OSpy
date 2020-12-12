@@ -1,17 +1,23 @@
 from scapy.all import ARP, Ether, srp
 from host import Host
+import sys
+import os
 
 
 class Nmap:
     def __init__(self):
+        user = os.getuid()
+        if user != 0:
+            print("You need to have root privileges to use this program. Please try again using 'sudo'.")
+            sys.exit()
         self.network = self._network()
         self.hosts = []
-        # Try catch the PermissionError (Operation not permitted)
         self.set_hosts(self._hosts_list(self.network))
+        print("erro as occured shit appenr")
         print(self)
 
     def _network(self):
-        return input("Enter your network with /24:\n")
+        return input("Enter your network with /24 (xxx.xxx.xxx.xxx/24):\n")
 
     def set_hosts(self, hosts_list):
         for host in hosts_list:
