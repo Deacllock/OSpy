@@ -1,5 +1,6 @@
 #  Defines FingerPrint and Result objets
 
+#ADD PROPER GCD COMPARATOR
 class Result:
     def __init__(self, category, params):
         self.category = category  # name of tests type
@@ -8,13 +9,13 @@ class Result:
     def __repr__(self):
         return self.category + str(self.params)
 
+    # add test expression operators
     def __eq__(self, other):
         if (len(self.params) != len(other.params)):
             return False
 
-        for p in self.params:
-            if (p not in other.params or self.params[p] != other.params[p]):
-                return False
+        if self.params != other.params:
+            return False
 
         return True
 
@@ -34,7 +35,7 @@ class FingerPrint:
         if (len(self.results) != len(other.results)):
             return False
 
-        for i in range(1):
+        for i in range(len(self.results)):
             if not (self.results[i] == other.results[i]):
                 return False
         return True

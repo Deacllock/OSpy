@@ -5,7 +5,7 @@ import os
 from fingerprints import FingerPrint, Result
 
 FINGERPRINTS = []
-R_TYPES = ['SEQ', 'OPS', 'WIN', 'T1']
+R_TYPES = ['OPS', 'WIN']#['SEQ', 'OPS', 'WIN', 'T1']
 
 
 #  Parse tests results linked to a specific Fingerprint
