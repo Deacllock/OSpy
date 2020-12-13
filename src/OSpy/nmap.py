@@ -6,8 +6,7 @@ import os
 
 class Nmap:
     def __init__(self):
-        user = os.getuid()
-        if user != 0:
+        if os.getuid() != 0:
             print("You need to have root privileges to use this program. Please try again using 'sudo'.")
             sys.exit()
         self.network = self._network()
