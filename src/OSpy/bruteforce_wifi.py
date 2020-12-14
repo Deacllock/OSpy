@@ -6,12 +6,10 @@ import os
 import getopt
 
 file = ''
-try:
-    opts, args = getopt.getopt(sys.argv, "r", ["file="])
-except getopt.GetoptError:
-    print("usage: -r password_file")
-    sys.exit(2)
-file = args
+if len(sys.argv()) != 3 or sys.argv()[1] != '-r':
+    print("failed")
+    sys.exit()
+file = sys.argv()[2]
 if not os.path.exists(file):
     print("file does not exists.")
     sys.exit()
