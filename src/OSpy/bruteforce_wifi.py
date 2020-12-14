@@ -37,7 +37,7 @@ def bruteforce(f):
     profile.cipher = const.CIPHER_TYPE_CCMP
     for password in passwords:
         # profile.key = "rba5829qaBdk"
-        profile.key = password
+        profile.key = password[0]
         interface.remove_all_network_profiles()
         new_profile = interface.add_network_profile(profile)
         time.sleep(1)
@@ -54,14 +54,14 @@ def bruteforce(f):
             interface.disconnect()
             exit()
         else:
-            pass
+            print(profile.key)
 
 
 f = ''
 parser = argparse.ArgumentParser()
 parser.add_argument("file")
 args = parser.parse_args()
-f = args
+f = args.file
 print(f)
 if not os.path.exists(f):
     print(f)
