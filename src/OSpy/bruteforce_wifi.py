@@ -51,7 +51,7 @@ def bruteforce(f):
             print("Connected ! password for {} is {}\n".format(profile.ssid,
                                                                profile.key))
             print("Execution took {} seconds.".format(time.time()-start_time))
-            interface.disconnect()
+           # interface.disconnect()
             exit()
         else:
             print(profile.key)
