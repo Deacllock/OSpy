@@ -6,23 +6,25 @@ import os
 import getopt
 
 
-file = ''
-try:
-    opts, args = getopt.getopt(argv, "h:r")
-except getopt.GetoptError:
-    print("failed")
-    sys.exit(2)
-if opts == "-h":
-    print("-r file")
-    sys.exit()
-else:
-    file = args
-if not os.path.exists(file):
-    print("file does not exists.")
-    sys.exit()
+def main(argv):
+    file = ''
+    try:
+        opts, args = getopt.getopt(argv, "h:r")
+    except getopt.GetoptError:
+        print("failed")
+        sys.exit(2)
+    if opts == "-h":
+        print("-r file")
+        sys.exit()
+    else:
+        file = args
+    if not os.path.exists(file):
+        print("file does not exists.")
+        sys.exit()
+    bruteforce(file)
 
 
-def passwords_list():
+def passwords_list(file):
     passwords = []
     with open(file, 'r', encoding='utf8') as words:
         for password in words:
@@ -31,12 +33,12 @@ def passwords_list():
     return passwords
 
 
-def bruteforce():
+def bruteforce(file):
     if os.getuid() != 0:
         print("You need to have root privileges to use this program. Please "
               "try again using 'sudo'.\n")
         sys.exit()
-    passwords = passwords_list()
+    passwords = passwords_list(file)
 #    wifi = pywifi.PyWiFi()
 #    interfaces = wifi.interfaces()[0]
 
@@ -70,3 +72,7 @@ def bruteforce():
             exit()
         else:
             pass
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
