@@ -5,11 +5,18 @@ import sys
 import os
 import getopt
 
+
 file = ''
-if len(sys.argv()) != 3 or sys.argv()[1] != '-r':
+try:
+    opts, args = getopt.getopt(argv, "h:r")
+except getopt.GetoptError:
     print("failed")
+    sys.exit(2)
+if opts == "-h":
+    print("-r file")
     sys.exit()
-file = sys.argv()[2]
+else:
+    file = args
 if not os.path.exists(file):
     print("file does not exists.")
     sys.exit()
