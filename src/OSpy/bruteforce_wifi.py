@@ -4,27 +4,7 @@ import time
 import sys
 import os
 import getopt
-
-
-def main(argv):
-    f = ''
-    try:
-        opts, args = getopt.getopt(argv, "h:r")
-    except getopt.GetoptError:
-        print("failed")
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt == "-h":
-            print("-r file")
-            sys.exit()
-        elif opt == "-r":
-            f = arg
-            print(f)
-    if not os.path.exists(f):
-        print(f)
-        print("file does not exists.")
-        sys.exit()
-    bruteforce(f)
+import argparse
 
 
 def passwords_list(f):
@@ -77,5 +57,14 @@ def bruteforce(f):
             pass
 
 
-if __name__ == "__main__":
-    main(sys.argv[1:])
+f = ''
+parser = argparse.ArgumentParser()
+parser.add_argument("file")
+args = parser.parse_args()
+f = args
+print(f)
+if not os.path.exists(f):
+    print(f)
+    print("file does not exists.")
+    sys.exit()
+bruteforce(f)
