@@ -16,12 +16,50 @@ def passwords_list():
     return passwords
 
 
+def profile_setup(name):
+    profile = pywifi.Profile()
+    profile.ssid = name
+    auth = ""
+    while auth not in ["1", "2"]:
+        auth = input("Authentication type ? 1) OPEN 2) SHARED")
+    if auth == "1":
+        profile.auth = const.AUTH_ALG_OPEN
+    else:
+        profile.auth = const.AUTH_ALG_SHARED
+    akm = ""
+    while akm not in ["1", "2", "3", "4", "5"]:
+        akm = input("Key management type ? 1) NONE 2) WPA 3) WPAPSK 4) WPA2 "
+                    "5) WPA2PSK")
+    if akm == "1":
+        profile.akm.append(const.AKM_TYPE_NONE)
+    elif akm == "2":
+        profile.akm.append(const.AKM_TYPE_WPA)
+    elif akm == "3":
+        profile.akm.append(const.AKM_TYPE_WPAPSK)
+    elif akm == "4":
+        profile.akm.append(const.AKM_TYPE_WPA2)
+    else:
+        profile.akm.append(const.AKM_TYPE_WPA2PSK)
+    cipher = ""
+    while cipher not in ["1", "2", "3", "4"]:
+        input("Cipher type ? 1) NONE 2) WEP 3) TKIP 4) CCMP")
+    if cipher == "1":
+        profile.cipher = const.CIPHER_TYPE_NONE
+    elif cipher == "2":
+        profile.cipher = const.CIPHER_TYPE_WEP
+    elif cipher == "3":
+        profile.cipher = const.CIPHER_TYPE_TKIP
+    else:
+        profile.cipher = const.CIPHER_TYPE_CCMP
+    return profile
+
+
 def bruteforce():
     if os.getuid() != 0:
         print("You need to have root privileges to use this program. Please "
               "try again using 'sudo'.\n")
         sys.exit()
-    passwords = passwords_list(f)
+    passwords = passwords_list()
 #    wifi = pywifi.PyWiFi()
 #    interfaces = wifi.interfaces()[0]
 
@@ -30,14 +68,11 @@ def bruteforce():
 
     wifi_name = input("Enter the name of the wifi network you want to try to "
                       "bruteforce:\n")
+
     start_time = time.time()
+    profile = profile_setup(wifi_name)
     for password in passwords:
         # profile.key = "rba5829qaBdk"
-        profile = pywifi.Profile()
-        profile.ssid = wifi_name
-        profile.auth = const.AUTH_ALG_OPEN
-        profile.akm.append(const.AKM_TYPE_WPA2PSK)
-        profile.cipher = const.CIPHER_TYPE_CCMP
         profile.key = password
         profile.key = password[0]
         interface.remove_all_network_profiles()
@@ -69,4 +104,4 @@ if not os.path.exists(f):
     print(f)
     print("file does not exists.")
     sys.exit()
-bruteforce(f)
+bruteforce()
