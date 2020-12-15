@@ -21,7 +21,7 @@ def profile_setup(name):
     profile.ssid = name
     auth = ""
     while auth not in ["1", "2"]:
-        auth = input("Authentication type ? 1) OPEN 2) SHARED")
+        auth = input("Authentication type ? 1) OPEN 2) SHARED\n")
     if auth == "1":
         profile.auth = const.AUTH_ALG_OPEN
     else:
@@ -29,7 +29,7 @@ def profile_setup(name):
     akm = ""
     while akm not in ["1", "2", "3", "4", "5"]:
         akm = input("Key management type ? 1) NONE 2) WPA 3) WPAPSK 4) WPA2 "
-                    "5) WPA2PSK")
+                    "5) WPA2PSK\n")
     if akm == "1":
         profile.akm.append(const.AKM_TYPE_NONE)
     elif akm == "2":
@@ -42,7 +42,7 @@ def profile_setup(name):
         profile.akm.append(const.AKM_TYPE_WPA2PSK)
     cipher = ""
     while cipher not in ["1", "2", "3", "4"]:
-        input("Cipher type ? 1) NONE 2) WEP 3) TKIP 4) CCMP")
+        cipher = input("Cipher type ? 1) NONE 2) WEP 3) TKIP 4) CCMP\n")
     if cipher == "1":
         profile.cipher = const.CIPHER_TYPE_NONE
     elif cipher == "2":
