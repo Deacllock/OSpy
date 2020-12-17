@@ -1,62 +1,62 @@
-#  W send several probes to an open port of a distant device
-#  We do some tests on the answers to create a "fingerprint"
-#  Then we try to find it in the fingerprint database
-
 from scapy.all import *
-import threading
-from scapy.arch import get_if_list
 
 from parse_db import parse_db
 from sequence_generation.sequence_generation import send_tcp_probes, parse_tcp_responses
-from icmp_echo.icmp_echo import send_icmp_probes, parse_icmp_responses
-from fingerprints import FingerPrint, Result
+from icmp_echo.icmp_echo import send_icmp_probes, get_ie
+
+from fingerprints import FingerPrint
 
 conf.L3socket = L3RawSocket
 
 TCP_RESPONSES, ICMP_RESPONSES = [], []
 TCP_SEQ_START, ICMP_SEQ_START = 22000, 295 
 
-
-#  Add sniffed packet into responses list
+# Check if the sniffed packets are the ones expected.
 def get_packet(packet):
-    if TCP in packet and 'A' in packet[TCP].flags \
-    and 'S' in packet[TCP].flags and not packet in TCP_RESPONSES:
+    if TCP in packet and packet[TCP].flags.A \
+    and packet[TCP].flags.S and not packet in TCP_RESPONSES:
         TCP_RESPONSES.append(packet)
 
     if ICMP in packet and packet[ICMP].type == 0 and not packet in ICMP_RESPONSES:
         ICMP_RESPONSES.append(packet)
 
-
-#  Sniff the network to get the responses to packets we have send
+# Start sniffing the network to get responses packets.
 def start_sniff(dst, src):
     filter = 'dst host %s and (src host %s' % (dst, src[0])
     for s in src[1:]:
         filter += ' or ' + s
     filter += ') and (tcp or icmp)'
 
-    t = AsyncSniffer(
+    sniffer = AsyncSniffer(
         iface=get_if_list(),
         filter=filter,
-        prn=get_packet)  # prn=lambda x: x.summary())
-    t.start()
+        prn=get_packet)
+    sniffer.start()
     time.sleep(2)
+    return sniffer
 
-
-#  Stop sniffing
+# Stop sniffing the network.
 def end_sniff(sniffer):
     sniffer.stop()
 
+# Print OS matching the constructed Fingerprint.
+def choose_os(os_list, dst):
+    if (len(os_list) == 0):
+        print("No OS detected for %s." % dst)
+    if (len(os_list) > 1):
+        print("Several OS could match your device:")
+    for os in os_list:
+        print("%s matches %s." % (os.name, dst))
 
-#  Find the OSs matching a specific Fingerprint
-#  return a list of FingerPrints matching
-def get_os_name(x):
+# Parse the nmap Fingerprints database and compares each entry with our Fingerprint.
+def get_os_name(x, dst):
     fp_db, os = parse_db('../db/nmap-os-db'), []
     for fp in fp_db:
         if x == fp:
             os.append(fp)
-    return os
+    choose_os(os, dst)
 
-
+# Check if we have received every packet expected.  Else add a None in the packet list.
 def check_results():
     tcp_responses, icmp_responses = [], []
 
@@ -85,23 +85,21 @@ def check_results():
 
     return tcp_responses, icmp_responses
 
-
-#  Start OS detection as specified above
-def os_detection(dst, src, dport):
+# Starts OS detection on a dst device, giving an open port.   Src is a list of src ip that can be use by the attacker.
+def os_detection(dst, src, open_dport):
     sniffer = start_sniff(dst, src)
 
-    send_tcp_probes(dst, dport)
-    send_icmp_probes(dst, dport)
+    send_tcp_probes(dst, open_dport)
+    send_icmp_probes(dst, open_dport)
 
     tcp_responses, icmp_responses = check_results()
-    tcp_r = parse_tcp_responses(tcp_responses)
-    #icmp_r = parse_icmp_responses(icmp_responses)
-    fp = FingerPrint('Who Am I', tcp_r)
-    oss = get_os_name(fp)
-    print(fp)
-    print(len(oss))
+    results = parse_tcp_responses(tcp_responses, icmp_responses)
+    results.append(get_ie(icmp_responses))
 
-    # end_sniff(sniffer)
+    fp = FingerPrint('Who Am I', results)
+    get_os_name(fp, dst)
+
+    end_sniff(sniffer)
 
 
 os_detection('127.0.0.1', ['127.0.0.1'], 80)  # dst + open port

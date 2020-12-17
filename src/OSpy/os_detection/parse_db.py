@@ -5,10 +5,10 @@ import os
 from fingerprints import FingerPrint, Result
 
 FINGERPRINTS = []
-R_TYPES = ['OPS', 'WIN']#['SEQ', 'OPS', 'WIN', 'T1']
+R_TYPES = ['OPS', 'WIN', 'T1', 'IE']
 
 
-#  Parse tests results linked to a specific Fingerprint
+# Parses Results linked to a specific Fingerprint.
 def get_results(category, params_list):
     ret = {}
     params = params_list.split('%')
@@ -29,7 +29,7 @@ def get_results(category, params_list):
     return Result(category, ret)
 
 
-#  Parse Fingerprint from the db
+# Extracts Fingerprints in the given db.
 def add_fingerprint(name, i, len_db, db):
     results = []
 
@@ -43,7 +43,7 @@ def add_fingerprint(name, i, len_db, db):
     return i
 
 
-#  Convert FingerPrints db to a python exploitable list of Fingerprints
+# Convert a FingerPrints db to a python exploitable list of Fingerprints.
 def parse_db(os_db):
     with open(os_db, 'r') as f:
         db = f.readlines()
