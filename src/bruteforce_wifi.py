@@ -14,7 +14,7 @@ def passwords_list():
         sys.exit()
     with open(f, 'r', encoding='utf8') as words:
         for password in words:
-            password = password.split("\n")
+            password = password.strip("\n")
             passwords.append(password)
     return passwords
 
