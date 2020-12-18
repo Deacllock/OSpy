@@ -3,12 +3,15 @@ from pywifi import const
 import time
 import sys
 import os
-import getopt
-import argparse
 
 
 def passwords_list():
     passwords = []
+    f = input("location of the password file:\n")
+    if not os.path.exists(f):
+        print(f)
+        print("file does not exists.")
+        sys.exit()
     with open(f, 'r', encoding='utf8') as words:
         for password in words:
             password = password.split("\n")
@@ -55,10 +58,6 @@ def profile_setup(name):
 
 
 def bruteforce():
-    if os.getuid() != 0:
-        print("You need to have root privileges to use this program. Please "
-              "try again using 'sudo'.\n")
-        sys.exit()
     passwords = passwords_list()
 
     wifi = pywifi.PyWiFi()
@@ -92,15 +91,3 @@ def bruteforce():
     print("No passwords matched :(\n")
     print("Execution took {} seconds.".format(time.time() - start_time))
     sys.exit()
-
-
-f = ''
-parser = argparse.ArgumentParser()
-parser.add_argument("file")
-args = parser.parse_args()
-f = args.file
-if not os.path.exists(f):
-    print(f)
-    print("file does not exists.")
-    sys.exit()
-bruteforce()
