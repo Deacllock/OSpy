@@ -94,7 +94,6 @@ def bruteforce():
     sys.exit()
 
 
-
 f = ''
 parser = argparse.ArgumentParser()
 parser.add_argument("file")
