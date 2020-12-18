@@ -29,7 +29,7 @@ def port_scan(port):
             ports_list.append(ip)
 #            print(port, 'is open for host', ip)
         con.close()
-    except:
+    except BaseException:
         pass
 
 
