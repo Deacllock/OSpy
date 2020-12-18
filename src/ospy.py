@@ -73,16 +73,25 @@ if __name__ == "__main__":
         while not is_ip_valid(device_ip):
             device_ip = input("Please enter a valid device IP.\n")
 
-        # Get open ports on the device
-        ports = get_ports(device_ip)
+        custom_port = ""
+        while custom_port not in ["Y", "N"]:
+            custom_port = input("Do you want to use a specific port? Y/N\n")
 
-        # Check if list is empty
-        if len(ports) == 0:
-            print("\nNo open ports on the choosen device. Exit.")
-            sys.exit()
+        if custom_port == "N":
+            # Get open ports on the device
+            ports = get_ports(device_ip)
 
-        # Choose an open port randomly
-        open_port = ports[random.randint(0, len(ports) - 1)]
+            # Check if list is empty
+            if len(ports) == 0:
+                print("\nNo open ports on the choosen device. Exit.")
+                sys.exit()
+
+            # Choose an open port randomly
+            open_port = ports[random.randint(0, len(ports) - 1)]
+
+        else:
+            open_port = int(input("What open port do you want to use?\n"))
+
 
         # Get user IPs
         ips = get_ips()

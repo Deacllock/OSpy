@@ -69,7 +69,6 @@ def bruteforce():
     start_time = time.time()
     profile = profile_setup(wifi_name)
     for password in passwords:
-        profile.key = password
         profile.key = password[0]
         interface.remove_all_network_profiles()
         new_profile = interface.add_network_profile(profile)
