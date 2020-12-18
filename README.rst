@@ -5,4 +5,4 @@ OSpy is a tool that will allow a user to access a network and then extract infor
 $pip install -r requirements.txt
 
 ## autopep8
-$ find . -name '*.py' -exec autopep8 --in-place --aggressive --agressive '{}' \;
+$ find . -name '*.py' -exec autopep8 --in-place --aggressive --aggressive '{}' \;
