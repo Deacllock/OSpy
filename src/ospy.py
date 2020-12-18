@@ -4,7 +4,7 @@ import random
 import socket
 import netifaces
 
-#from bruteforce_wifi import bruteforce
+from bruteforce_wifi import bruteforce
 from nmap import Nmap
 from ports import get_ports
 from os_detection.os_detection import os_detection
@@ -49,8 +49,7 @@ if __name__ == "__main__":
 
     # Bruteforce wifi
     if action == "1":
-        print("Bruteforce")
-        #bruteforce()
+        bruteforce()
 
     # Get devices on the Network
     if action == "2":
