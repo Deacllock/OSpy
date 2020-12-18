@@ -1,6 +1,7 @@
 from scapy.all import *
-from fingerprints import Result
-import results_common_functions as commons
+
+from os_detection.fingerprints import Result
+import os_detection.results_common_functions as commons
 
 SEQ_START = 22000
 ACK_START = 44000

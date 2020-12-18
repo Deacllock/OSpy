@@ -1,9 +1,9 @@
 from scapy.all import *
 import time
 
-from fingerprints import Result, FingerPrint
-from sequence_generation.seq import get_seq
-from sequence_generation.t1 import get_t1
+from os_detection.fingerprints import Result, FingerPrint
+from os_detection.sequence_generation.seq import get_seq
+from os_detection.sequence_generation.t1 import get_t1
 
 SEQ_START = 22000
 ACK_START = 44000

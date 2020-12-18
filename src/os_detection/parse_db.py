@@ -2,7 +2,7 @@
 # used as templates
 
 import os
-from fingerprints import FingerPrint, Result
+from os_detection.fingerprints import FingerPrint, Result
 
 FINGERPRINTS = []
 R_TYPES = ['OPS', 'WIN', 'T1', 'IE']

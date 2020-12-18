@@ -1,8 +1,8 @@
 from scapy.all import *
 import random
 
-from fingerprints import Result
-import results_common_functions as commons
+from os_detection.fingerprints import Result
+import os_detection.results_common_functions as commons
 
 
 def get_ie_dfi(responses):

@@ -1,7 +1,8 @@
 from scapy.all import *
-from fingerprints import Result
 import math
 import statistics
+
+from os_detection.fingerprints import Result
 
 SEQ_START = 22000
 ACK_START = 44000

@@ -1,10 +1,10 @@
 from scapy.all import *
 
-from parse_db import parse_db
-from sequence_generation.sequence_generation import send_tcp_probes, parse_tcp_responses
-from icmp_echo.icmp_echo import send_icmp_probes, get_ie
+from os_detection.parse_db import parse_db
+from os_detection.sequence_generation.sequence_generation import send_tcp_probes, parse_tcp_responses
+from os_detection.icmp_echo.icmp_echo import send_icmp_probes, get_ie
 
-from fingerprints import FingerPrint
+from os_detection.fingerprints import FingerPrint
 
 conf.L3socket = L3RawSocket
 
@@ -26,11 +26,12 @@ def get_packet(packet):
 
 
 def start_sniff(dst, src):
-    filter = 'dst host %s and (src host %s' % (dst, src[0])
+    filter = 'src host %s and (dst host %s' % (dst, src[0])
     for s in src[1:]:
-        filter += ' or ' + s
+        filter += ' or dst host ' + s
     filter += ') and (tcp or icmp)'
 
+    print(filter)
     sniffer = AsyncSniffer(
         iface=get_if_list(),
         filter=filter,
@@ -61,7 +62,7 @@ def choose_os(os_list, dst):
 
 
 def get_os_name(x, dst):
-    fp_db, os = parse_db('../db/nmap-os-db'), []
+    fp_db, os = parse_db('db/nmap-os-db'), []
     for fp in fp_db:
         if x == fp:
             os.append(fp)
@@ -73,29 +74,39 @@ def get_os_name(x, dst):
 
 def check_results():
     tcp_responses, icmp_responses = [], []
+    if TCP_RESPONSES == []:
+        tcp_responses = [None, None, None, None, None, None]
 
-    for tcp_seq_i in range(6):
-        for i in range(len(TCP_RESPONSES)):
-            if TCP_RESPONSES[i][TCP].ack != (
-                    TCP_SEQ_START + 10 * tcp_seq_i + 1):
-                if i == len(TCP_RESPONSES) - 1:
-                    tcp_responses.append(None)
-                else:
-                    continue
-            else:
-                tcp_responses.append(TCP_RESPONSES[i])
-                break
+    else:
+        for tcp_seq_i in range(6):
+            for i in range(len(TCP_RESPONSES)):
+                if TCP_RESPONSES[i][TCP].ack != (
+                        TCP_SEQ_START + 10 * tcp_seq_i + 1):
+                    if i == len(TCP_RESPONSES) - 1:
+                        tcp_responses.append(None)
+                    
+                    else:
+                        continue
 
-    for icmp_seq_i in range(2):
-        for i in range(len(ICMP_RESPONSES)):
-            if ICMP_RESPONSES[i][ICMP].seq != (ICMP_SEQ_START + icmp_seq_i):
-                if i == len(ICMP_RESPONSES) - 1:
-                    icmp_responses.append(None)
                 else:
-                    continue
-            else:
-                icmp_responses.append(ICMP_RESPONSES[i])
-                break
+                    tcp_responses.append(TCP_RESPONSES[i])
+                    break
+
+
+    if ICMP_RESPONSES == []:
+        icmp_responses = [None, None]
+
+    else:
+        for icmp_seq_i in range(2):
+            for i in range(len(ICMP_RESPONSES)):
+                if ICMP_RESPONSES[i][ICMP].seq != (ICMP_SEQ_START + icmp_seq_i):
+                    if i == len(ICMP_RESPONSES) - 1:
+                        icmp_responses.append(None)
+                    else:
+                        continue
+                else:
+                    icmp_responses.append(ICMP_RESPONSES[i])
+                    break
 
     return tcp_responses, icmp_responses
 
@@ -108,7 +119,6 @@ def os_detection(dst, src, open_dport):
 
     send_tcp_probes(dst, open_dport)
     send_icmp_probes(dst, open_dport)
-
     tcp_responses, icmp_responses = check_results()
     results = parse_tcp_responses(tcp_responses, icmp_responses)
     results.append(get_ie(icmp_responses))

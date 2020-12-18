@@ -30,5 +30,5 @@ class Host:
 
     # add option for oppening ports
     def __repr__(self):
-        return "{:18}   {:18}   {:18}   {}".format(
-            self.dns_name, self.ip, self.mac, self.os)
+        return "{:18}   {:18}   {:18}".format(
+            self.dns_name, self.ip, self.mac)

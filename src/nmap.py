@@ -37,7 +37,7 @@ class Nmap:
         msg = '\nnmap into %s\n' % self.network
         msg += "Available devices in the network: %d\n\n" % len(self.hosts)
 
-        msg += "NAME" + " " * 18 + "IP" + " " * 18 + "MAC" + " " * 18 + "OS\n"
+        msg += "NAME" + " " * 18 + "IP" + " " * 18 + "MAC" + " " * 18 + "\n"
         for h in self.hosts:
             msg += str(h) + '\n'
 
